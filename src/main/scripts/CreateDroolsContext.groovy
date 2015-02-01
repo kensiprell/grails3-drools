@@ -1,3 +1,4 @@
+/*
 target(createDroolsContext: "Creates a default drools-context.xml in grails-app/conf/.") {
 	def droolsContextFile = new File(basedir, "grails-app/conf/drools-context.xml")
 	if (!droolsContextFile.exists()) {
@@ -13,3 +14,4 @@ USAGE = """
 """
 
 setDefaultTarget 'createDroolsContext'
+*/

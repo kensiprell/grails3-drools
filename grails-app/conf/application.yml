@@ -2,7 +2,10 @@
 grails:
   profile: web-plugin
   codegen:
-    defaultPackage: grails3plugin
+    defaultPackage: drools
+  plugin:
+    drools:
+      droolsRuleDomainClass: 'grails.plugin.drools.DroolsRule'
 info:
     app:
         name: '@info.app.name@'
@@ -108,4 +111,11 @@ environments:
                jdbcInterceptors: ConnectionState
                defaultTransactionIsolation: TRANSACTION_READ_COMMITTED            
 
-
+# TODO
+#hibernate {
+#	cache.use_second_level_cache = true
+#	cache.use_query_cache = false
+#	cache.region.factory_class = 'org.hibernate.cache.ehcache.EhCacheRegionFactory'
+#	flush.mode = 'manual'
+#	singleSession = true
+#}

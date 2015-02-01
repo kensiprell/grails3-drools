@@ -1,3 +1,4 @@
+/*
 import static groovy.io.FileType.FILES
 import grails.util.Environment
 import groovy.xml.MarkupBuilder
@@ -120,3 +121,4 @@ private void writeDroolsContentXml(basedir, isPluginProject) {
 private listenerTypeCheck(type) {
 	["agendaEventListener", "processEventListener", "ruleRuntimeEventListener"].contains(type)
 }
+*/

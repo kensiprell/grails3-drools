@@ -1,3 +1,4 @@
+/*
 includeTargets << grailsScript("_GrailsCreateArtifacts")
 includeTargets << grailsScript('_GrailsPackage')
 
@@ -44,3 +45,4 @@ where
 """
 
 setDefaultTarget 'createDroolsDomain'
+*/

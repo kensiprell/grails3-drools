@@ -1,3 +1,4 @@
+/*
 includeTargets << new File(droolsPluginDir, "scripts/_DroolsUtils.groovy")
 
 def droolsConfigFile = new File(basedir, "grails-app/conf/DroolsConfig.groovy")
@@ -17,3 +18,4 @@ println """
 *                                                     *
 *******************************************************
 """
+*/

@@ -1,3 +1,4 @@
+/*
 includeTargets << new File(droolsPluginDir, "scripts/_DroolsUtils.groovy")
 
 target(createDroolsConfig: "Creates a default DroolsConfig.groovy in grails-app/conf/.") {
@@ -15,3 +16,4 @@ USAGE = """
 """
 
 setDefaultTarget 'createDroolsConfig'
+*/

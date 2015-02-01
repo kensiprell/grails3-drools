@@ -17,6 +17,7 @@ stacktrace.log
 /.gradle
 /.idea
 /.link_to_grails_plugins
+/build
 /out
 /target
 /target-eclipse
