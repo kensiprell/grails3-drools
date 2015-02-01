@@ -1,4 +1,6 @@
-@artifact.package@class @artifact.name@ {
+package ${packageName}
+
+class ${className} {
 
 	String rule        // Do not change or delete this field.
 	String packageName // Do not change or delete this field.

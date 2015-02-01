@@ -1,4 +1,6 @@
-import grails.plugin.drools.DroolsDomainClassArtefactHandler
+package grails.plugin.drools
+
+//import grails.plugin.drools.DroolsDomainClassArtefactHandler
 
 class DroolsGrailsPlugin {
 
@@ -21,7 +23,7 @@ class DroolsGrailsPlugin {
 	def license = "APACHE"
 	def issueManagement = [system: "JIRA", url: "https://jira.grails.org/browse/GPDROOLS"]
 	def scm = [url: "https://github.com/kensiprell/grails-drools"]
-	def artefacts = [DroolsDomainClassArtefactHandler]
+	//def artefacts = [DroolsDomainClassArtefactHandler]
 
 	def doWithSpring = {
 		try {
