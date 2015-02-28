@@ -18,7 +18,5 @@ stacktrace.log
 /.idea
 /.link_to_grails_plugins
 /build
-/out
-/target
-/target-eclipse
-/web-app
+buildSrc/.gradle
+buildSrc/build

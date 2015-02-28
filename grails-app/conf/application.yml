@@ -3,9 +3,6 @@ grails:
   profile: web-plugin
   codegen:
     defaultPackage: drools
-  plugin:
-    drools:
-      droolsRuleDomainClass: 'grails.plugin.drools.DroolsRule'
 info:
     app:
         name: '@info.app.name@'
@@ -18,6 +15,11 @@ spring:
 
 ---
 grails:
+  plugin:
+    drools:
+      configurationType: droolsConfigGroovy
+      droolsRuleDomainClass: grails.plugin.drools.DroolsRule
+      drlFileLocation: src/rules
     mime:
         disable:
             accept:

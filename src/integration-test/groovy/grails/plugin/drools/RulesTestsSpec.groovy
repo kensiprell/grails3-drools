@@ -1,15 +1,24 @@
 package grails.plugin.drools
 
-import grails.test.spock.IntegrationSpec
+import spock.lang.Specification
+//import org.kie.api.runtime.KieSession
 
 import org.kie.api.runtime.KieSession
 import org.kie.api.runtime.StatelessKieSession
 
-class RulesTests extends IntegrationSpec {
+class RulesTestsSpec extends Specification {
 
 	def droolsService
 	StatelessKieSession applicationStatelessSession
 	KieSession ticketStatefulSession
+
+	void "should fail"() {
+		when:
+		def one = 1
+		def two = 2
+		then:
+		one == two
+	}
 
 	void "test applicationStatelessSession bean"() {
 		when: "age is over 18 and application is made this year"

@@ -1,3 +1,25 @@
+description("Creates a default DroolsConfig.groovy in grails-app/conf/.") {
+    usage "grails create-drools-config"
+}
+
+render  template:"DroolsConfig.groovy",
+        destination: file( "grails-app/conf/DroolsConfig.groovy")
+
+		// TODO warn if overwrite
+/*
+
+description "Installs scaffolding templates that use f:all to render properties", "grails install-form-fields-templates"
+
+updateStatus "Copying fields templates"
+copy {
+	from templates("fields/scaffolding*/
+/*.gsp")
+	into "src/templates/scaffolding"
+}
+addStatus "Template installation complete"
+*/
+
+
 /*
 includeTargets << new File(droolsPluginDir, "scripts/_DroolsUtils.groovy")
 

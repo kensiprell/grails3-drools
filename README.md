@@ -19,7 +19,7 @@ If you have a question, problem, suggestion, or want to report a bug, please sub
 [Release Notes](https://github.com/kensiprell/grails-drools/wiki/Release-Notes)
 
 ## How the Plugin Works
-The plugin offers a variety of ways to use rules. The [RuleTests](https://github.com/kensiprell/grails-drools/blob/master/test/integration/grails/plugin/drools/RulesTests.groovy) and [TestController](https://github.com/kensiprell/grails-drools-sample/blob/master/grails-app/controllers/grails/plugin/drools_sample/TestController.groovy) classes show several examples.
+The plugin offers a variety of ways to use rules. The [RuleTests](https://github.com/kensiprell/grails-drools/blob/master/test/integration/grails/plugin/drools/integration.grails.plugin.drools.RulesTests.groovy) and [TestController](https://github.com/kensiprell/grails-drools-sample/blob/master/grails-app/controllers/grails/plugin/drools_sample/TestController.groovy) classes show several examples.
 
 ### Beans
 You can define beans using either a configuration file `grails-app/conf/DroolsConfig.groovy` or an xml file `grails-app/conf/drools-context.xml`. This will allow you to do something like this:
@@ -63,12 +63,12 @@ Although Grails prefers convention over configuration, you cannot avoid some con
 
 After the plugin is installed you will find a heavily commented [DroolsConfig.groovy](https://github.com/kensiprell/grails-drools/blob/master/src/templates/conf/DroolsConfig.groovy) in `grails-app/conf/` that you can use as a starting point for configuring your beans. When your application is compiled this file is parsed and `grails-app/conf/drools-context.xml` is created (or overwritten). For example, [DroolsTestConfig.groovy](https://github.com/kensiprell/grails-drools/blob/master/grails-app/conf/DroolsTestConfig.groovy) is the one used for plugin integration tests.
 
-#### BuildConfig.groovy
+#### gradle.properties
 
-There are two options that you can configure in your `grails-app/conf/BuildConfig.groovy`. The defaults are shown below:
+There are two options that you can configure in your `gradle.properties` file. The defaults are shown below:
 
-    grails.plugin.drools.configurationType = "droolsConfigGroovy"
-    grails.plugin.drools.drlFileLocation = "src/rules"
+    drooolsConfigurationType=droolsConfigGroovy
+    droolsDrlFileLocation=src/rules
 
 ##### grails.plugin.drools.configurationType
 The option below will stop the plugin from overwriting `grails-app/conf/drools-context.xml`. This will allow you to edit the file manually without losing changes.

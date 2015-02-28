@@ -5,11 +5,13 @@ class Customer {
 	String subscription
 	int discount
 
+/*
 	Customer(String name, String subscription) {
 		this()
 		this.name = name
 		this.subscription = subscription
 	}
+*/
 
 	String toString() {
 		"Name: '$name', Subscription: '$subscription', Discount: $discount %"

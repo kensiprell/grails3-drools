@@ -1,6 +1,8 @@
 buildscript {
 	ext {
 		grailsVersion = project.grailsVersion
+		drooolsConfigurationType = 'droolsConfigGroovy'
+		droolsDrlFileLocation = 'src/rules'
 	}
 	repositories {
 		mavenLocal()
@@ -13,26 +15,20 @@ buildscript {
 	}
 }
 
-/* TODO
-grails.project.dependency.distribution = {
-	remoteRepository(id: "localPluginReleases", url: "http://localhost:8081/artifactory/plugins-release-local/")
-	remoteRepository(id: "localPluginSnapshots", url: "http://localhost:8081/artifactory/plugins-snapshot-local/")
-}
-*/
-
 plugins {
 	id "io.spring.dependency-management" version "0.3.1.RELEASE"
 }
 
+apply plugin: "grails-drools"
 apply plugin: "spring-boot"
 apply plugin: "asset-pipeline"
 apply plugin: "org.grails.grails-plugin"
 apply plugin: "org.grails.grails-gsp"
-apply plugin: 'maven-publish'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
+apply plugin: "maven-publish"
+apply plugin: "eclipse"
+apply plugin: "idea"
 // Used for publishing to central repository, remove if not needed
-apply from: 'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/grailsCentralPublishing.gradle'
+//apply from: 'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/grailsCentralPublishing.gradle'
 //apply from:'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/bintrayPublishing.gradle'
 
 ext {
@@ -40,11 +36,10 @@ ext {
 	gradleWrapperVersion = project.gradleWrapperVersion
 }
 
-version "0.1-SNAPSHOT"
+version "0.1.1-SNAPSHOT"
 group "org.grails.plugins"
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
-
 
 repositories {
 	mavenLocal()
@@ -61,9 +56,9 @@ dependencyManagement {
 
 dependencies {
 	String comSunXmlBindVersion = "2.2.11"
+	// TODO test with excludes
 	String droolsVersion = "6.2.0.CR4"
 	//"6.1.0.Final" results in java.lang.IncompatibleClassChangeError: class org.grails.compiler.injection.GrailsAwareInjectionOperation$1 has interface org.springframework.asm.ClassVisitor as super class.
-
 	provided "org.springframework.boot:spring-boot-starter-logging"
 	provided "org.springframework.boot:spring-boot-starter-actuator"
 	provided "org.springframework.boot:spring-boot-autoconfigure"
@@ -71,11 +66,7 @@ dependencies {
 	provided "org.grails:grails-web-boot"
 	provided "org.grails:grails-dependencies"
 	provided 'javax.servlet:javax.servlet-api:3.1.0'
-
-	testCompile "org.grails:grails-plugin-testing"
-
 	console "org.grails:grails-console"
-
 	compile "org.drools:drools-compiler:$droolsVersion"
 	compile "org.drools:drools-core:$droolsVersion"
 	compile "org.drools:drools-decisiontables:$droolsVersion"
@@ -84,7 +75,6 @@ dependencies {
 	compile "org.kie:kie-api:$droolsVersion"
 	compile "org.kie:kie-internal:$droolsVersion"
 	compile "org.kie:kie-spring:$droolsVersion"
-
 	runtime "com.sun.xml.bind:jaxb-xjc:$comSunXmlBindVersion"
 	runtime "com.sun.xml.bind:jaxb-impl:$comSunXmlBindVersion"
 	runtime "org.codehaus.janino:janino:2.7.5"
@@ -92,6 +82,7 @@ dependencies {
 	runtime "org.eclipse.jdt.core.compiler:ecj:4.4"
 	runtime "org.mvel:mvel2:2.2.2.Final"
 	runtime "org.antlr:antlr-runtime:3.5.2"
+	testCompile "org.grails:grails-plugin-testing"
 }
 
 eclipse {
@@ -109,3 +100,48 @@ idea {
 task wrapper(type: Wrapper) {
 	gradleVersion = gradleWrapperVersion
 }
+
+//exclude "grails-app/conf/drools-context.xml"
+//exclude "grails-app/conf/DroolsConfig.groovy"
+//exclude "grails-app/domain/**"
+//exclude "src/rules/**"
+
+// gradle publishArtifactoryPublicationToMavenRepository
+publishing {
+	publications {
+		artifactory(MavenPublication) {
+			pom.withXml {
+				def node = asNode()
+				node.dependencyManagement.replaceNode {}
+			}
+			artifactId project.name
+			from components.java
+			artifact sourcesJar
+			artifact javadocJar
+			artifact source: "$rootDir/buildSrc/build/libs/buildSrc.jar",
+				classifier: "grails-drools-gradle-plugin",
+				extension: "jar"
+			artifact source: "${sourceSets.main.output.classesDir}/META-INF/grails-plugin.xml",
+				classifier: "plugin",
+				extension: "xml"
+		}
+	}
+	repositories {
+		maven {
+			credentials {
+				username "admin"
+				password "password"
+			}
+			if (version.endsWith('-SNAPSHOT')) {
+				url "http://localhost:8081/artifactory/plugins3-snapshot-local/"
+			} else {
+				url "http://localhost:8081/artifactory/plugins3-release-local/"
+			}
+		}
+	}
+}
+
+task install(dependsOn: project.tasks.withType(PublishToMavenLocal))
+
+//tasks.copyDroolsRule.dependsOn(processResources)
+tasks.writeDroolsContentXml.dependsOn(processResources)
