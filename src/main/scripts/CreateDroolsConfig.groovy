@@ -21,6 +21,11 @@ addStatus "Template installation complete"
 
 
 /*
+target(copyDroolsConfig: "Copies default DroolsConfig.groovy to grails-app/conf") {
+	ant.copy(file: "${droolsPluginDir}/src/templates/conf/DroolsConfig.groovy", todir: "${basedir}/grails-app/conf")
+}
+
+
 includeTargets << new File(droolsPluginDir, "scripts/_DroolsUtils.groovy")
 
 target(createDroolsConfig: "Creates a default DroolsConfig.groovy in grails-app/conf/.") {
