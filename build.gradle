@@ -102,13 +102,8 @@ task wrapper(type: Wrapper) {
 	gradleVersion = gradleWrapperVersion
 }
 
-// TODO test excludes
-//exclude "grails-app/conf/drools-context.xml"
-//exclude "grails-app/conf/DroolsConfig.groovy"
-//exclude "grails-app/domain/**"
-//exclude "src/rules/**"
+task install(dependsOn: project.tasks.withType(PublishToMavenLocal))
 
-// gradle publishArtifactoryPublicationToMavenRepository
 publishing {
 	publications {
 		artifactory(MavenPublication) {
@@ -128,25 +123,9 @@ publishing {
 				extension: "xml"
 		}
 	}
-	repositories {
-		maven {
-			credentials {
-				username localArtifactoryUsername
-				password localArtifactoryPassword
-			}
-			if (version.endsWith('-SNAPSHOT')) {
-				url "http://localhost:8081/artifactory/plugins3-snapshot-local/"
-			} else {
-				url "http://localhost:8081/artifactory/plugins3-release-local/"
-			}
-		}
-	}
 }
 
-task install(dependsOn: project.tasks.withType(PublishToMavenLocal))
-
-/*
-task installArtifactory(dependsOn: publishArtifactoryPublicationToMavenRepository) {
+task installArtifactory(dependsOn: "publishArtifactoryPublicationToMavenRepository") {
 	publishing {
 		repositories {
 			maven {
@@ -163,6 +142,5 @@ task installArtifactory(dependsOn: publishArtifactoryPublicationToMavenRepositor
 		}
 	}
 }
-*/
 
 tasks.processResources.dependsOn(copyDroolsRule, writeDroolsContentXml)
