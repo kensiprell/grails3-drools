@@ -130,11 +130,9 @@ publishing {
 	}
 	repositories {
 		maven {
-			// TODO move to ~/.gradle/gradle.properties
-			// prefix with systemProp.?
 			credentials {
-				username "admin"
-				password "password"
+				username localArtifactoryUsername
+				password localArtifactoryPassword
 			}
 			if (version.endsWith('-SNAPSHOT')) {
 				url "http://localhost:8081/artifactory/plugins3-snapshot-local/"
