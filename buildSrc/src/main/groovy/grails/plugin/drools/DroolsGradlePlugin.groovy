@@ -22,7 +22,7 @@ class DroolsGradlePlugin implements Plugin<Project> {
 			String destination
 			String drlFileLocationPath
 			project.gradle.taskGraph.whenReady { graph ->
-				destination = "$project.buildDir/classes"
+				destination = "$project.buildDir/classes/main"
 				if (graph.hasTask(":integrationTest")) {
 					destination = "$project.buildDir/classes/integrationTest"
 				}
@@ -50,46 +50,20 @@ class DroolsGradlePlugin implements Plugin<Project> {
 		}
 
 		project.task('writeDroolsContentXml') {
-			println "TEST: writeDroolsContentXml configuration"
-			// TODO inputs
-			// TODO outputs
+			def droolsConfigFile = new File("$project.projectDir/grails-app/conf/DroolsConfig.groovy").toURI().toURL()
+			def droolsContextXmlFile = new File("$project.projectDir/grails-app/conf/drools-context.xml")
+			inputs.file droolsConfigFile
+			outputs.file droolsContextXmlFile
 			doLast {
-				println "TEST: writeDroolsContentXml execution"
 				if (project.drooolsConfigurationType != "droolsConfigGroovy") return
-				//println "TEST: " + project.name
-				//println "TEST: " + projectDir
 				def droolsConfig
-				def droolsConfigFile = new File("$project.projectDir/grails-app/conf/DroolsConfig.groovy").toURI().toURL()
-				def droolsContextXmlFile = new File("$project.projectDir/grails-app/conf/drools-context.xml")
-				//def isPluginProject = false
 				def slurper = new ConfigSlurper()
-				/*
-			// TODO
-			if (project.name == "grails3-drools") {
-				isPluginProject = true
-			}
-			if (isPluginProject) {
-				droolsConfigFile = new File("$projectDir/grails-app/conf/DroolsTestConfig.groovy").toURI().toURL()
-			} else {
-				droolsConfigFile = new File("$projectDir/grails-app/conf/DroolsConfig.groovy").toURI().toURL()
-				if (!droolsConfigFile) {
-					// TODO
-					// Ignore and rely on try-catch below?
-					// CreateDroolsContext() ?
-					//copyDroolsConfig()
-					//droolsConfigFile = new File("$projectDir/grails-app/conf/DroolsConfig.groovy").toURI().toURL()
-				}
-			}
-		*/
 				try {
 					droolsConfig = slurper.parse(droolsConfigFile)
 				}
 				catch (e) {
-					//if (isPluginProject) {
-					//	println "ERROR: $e"
-					//} else {
+					log.debug e
 					println "ERROR: grails-app/conf/DroolsConfig.groovy does not exist. Run 'grails create-drools-config'."
-					//}
 					return
 				}
 				def writer = new StringWriter()
