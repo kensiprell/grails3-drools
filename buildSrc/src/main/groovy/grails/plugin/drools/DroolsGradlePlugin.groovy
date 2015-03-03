@@ -7,10 +7,6 @@ import org.gradle.api.Plugin
 
 class DroolsGradlePlugin implements Plugin<Project> {
 
-	def eventCreateWarEnd() {
-		//copyFiles("$stagingDir/WEB-INF/classes")
-	}
-
 	private static Boolean listenerTypeCheck(type) {
 		["agendaEventListener", "processEventListener", "ruleRuntimeEventListener"].contains(type)
 	}
@@ -25,6 +21,7 @@ class DroolsGradlePlugin implements Plugin<Project> {
 				if (graph.hasTask(":integrationTest")) {
 					destination = "$project.buildDir/classes/integrationTest"
 				}
+				// TODO add path for war creation
 				drlFileLocationPath = new File("$project.projectDir/$project.droolsDrlFileLocation").canonicalPath
 				 tree = project.fileTree(drlFileLocationPath) {
 					include "**/*.drl"
