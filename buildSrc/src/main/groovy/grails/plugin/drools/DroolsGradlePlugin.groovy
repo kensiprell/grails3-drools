@@ -8,14 +8,6 @@ import org.gradle.api.Plugin
 
 class DroolsGradlePlugin implements Plugin<Project> {
 
-	def eventTestCompileEnd() {
-		//def integrationPath = "${grailsSettings.testClassesDir}/integration"
-		//def integrationDir = new File(integrationPath)
-		//if (integrationDir.exists()) {
-		//	copyFiles(integrationPath)
-		//}
-	}
-
 	def eventCreateWarEnd() {
 		//copyFiles("$stagingDir/WEB-INF/classes")
 	}
@@ -26,16 +18,23 @@ class DroolsGradlePlugin implements Plugin<Project> {
 
 	void apply(Project project) {
 		project.task('copyDroolsRule') {
-			println "TEST: copyDroolsRule configuration"
-			String drlFileLocationPath = new File("$project.projectDir/$project.droolsDrlFileLocation").canonicalPath
-			FileTree tree = project.fileTree(drlFileLocationPath) {
-				include "**/*.drl"
-				include "**/*.rule"
+			FileTree tree
+			String destination
+			String drlFileLocationPath
+			project.gradle.taskGraph.whenReady { graph ->
+				destination = "$project.buildDir/classes"
+				if (graph.hasTask(":integrationTest")) {
+					destination = "$project.buildDir/classes/integrationTest"
+				}
+				drlFileLocationPath = new File("$project.projectDir/$project.droolsDrlFileLocation").canonicalPath
+				 tree = project.fileTree(drlFileLocationPath) {
+					include "**/*.drl"
+					include "**/*.rule"
+				}
+				inputs.file tree
+				outputs.dir destination
 			}
-			inputs.file tree
-			outputs.dir "$project.buildDir/classes"
 			doLast {
-				println "TEST: copyDroolsRule execution"
 				tree.each { File file ->
 					String filePath = file.canonicalPath
 					String newName = ("rules$filePath" - drlFileLocationPath).replaceAll("/", ".").replaceAll("\\\\", ".")
@@ -44,7 +43,7 @@ class DroolsGradlePlugin implements Plugin<Project> {
 						rename { String fileName ->
 							fileName.replace(fileName, newName)
 						}
-						into "$project.buildDir/classes"
+						into destination
 					}
 				}
 			}
