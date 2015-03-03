@@ -143,6 +143,26 @@ publishing {
 	}
 }
 
-//task install(dependsOn: project.tasks.withType(PublishToMavenLocal))
+task install(dependsOn: project.tasks.withType(PublishToMavenLocal))
+
+/*
+task installArtifactory(dependsOn: publishArtifactoryPublicationToMavenRepository) {
+	publishing {
+		repositories {
+			maven {
+				credentials {
+					username localArtifactoryUsername
+					password localArtifactoryPassword
+				}
+				if (version.endsWith('-SNAPSHOT')) {
+					url "http://localhost:8081/artifactory/plugins3-snapshot-local/"
+				} else {
+					url "http://localhost:8081/artifactory/plugins3-release-local/"
+				}
+			}
+		}
+	}
+}
+*/
 
 tasks.processResources.dependsOn(copyDroolsRule, writeDroolsContentXml)

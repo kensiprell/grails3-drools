@@ -5,7 +5,6 @@ import org.gradle.api.file.FileTree
 import org.gradle.api.Project
 import org.gradle.api.Plugin
 
-
 class DroolsGradlePlugin implements Plugin<Project> {
 
 	def eventCreateWarEnd() {
