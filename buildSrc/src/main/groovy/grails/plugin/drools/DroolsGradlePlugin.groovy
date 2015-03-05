@@ -16,13 +16,14 @@ class DroolsGradlePlugin implements Plugin<Project> {
 			FileTree tree
 			String destination
 			String drlFileLocationPath
+			String droolsDrlFileLocation = project.droolsDrlFileLocation ?: "src/rules"
 			project.gradle.taskGraph.whenReady { graph ->
 				destination = "$project.buildDir/classes/main"
 				if (graph.hasTask(":integrationTest")) {
 					destination = "$project.buildDir/classes/integrationTest"
 				}
 				// TODO add path for war creation
-				drlFileLocationPath = new File("$project.projectDir/$project.droolsDrlFileLocation").canonicalPath
+				drlFileLocationPath = new File("$project.projectDir/$droolsDrlFileLocation").canonicalPath
 				 tree = project.fileTree(drlFileLocationPath) {
 					include "**/*.drl"
 					include "**/*.rule"
@@ -52,16 +53,12 @@ class DroolsGradlePlugin implements Plugin<Project> {
 			outputs.file droolsContextXmlFile
 			doLast {
 				if (project.drooolsConfigurationType != "droolsConfigGroovy") return
-				def droolsConfig
-				def slurper = new ConfigSlurper()
-				try {
-					droolsConfig = slurper.parse(droolsConfigFile)
-				}
-				catch (e) {
-					log.debug e
+				if (!droolsConfigFile) {
 					println "ERROR: grails-app/conf/DroolsConfig.groovy does not exist. Run 'grails create-drools-config'."
 					return
 				}
+				def slurper = new ConfigSlurper()
+				def droolsConfig = slurper.parse(droolsConfigFile)
 				def writer = new StringWriter()
 				def droolsContentXml = new MarkupBuilder(writer)
 				droolsContentXml.mkp.xmlDeclaration(version: "1.0", encoding: "utf-8")
