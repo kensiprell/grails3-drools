@@ -22,7 +22,7 @@ class DroolsGradlePlugin implements Plugin<Project> {
 				if (graph.hasTask(":integrationTest")) {
 					destination = "$project.buildDir/classes/integrationTest"
 				}
-				// TODO add path for war creation
+				// TODO add test and path for war creation "$stagingDir/WEB-INF/classes"
 				drlFileLocationPath = new File("$project.projectDir/$droolsDrlFileLocation").canonicalPath
 				 tree = project.fileTree(drlFileLocationPath) {
 					include "**/*.drl"
