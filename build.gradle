@@ -30,9 +30,7 @@ apply plugin: "org.grails.grails-gsp"
 apply plugin: "maven-publish"
 apply plugin: "eclipse"
 apply plugin: "idea"
-// TODO gradle publishArtifactoryPublicationToMavenRepository does not work if uncommented
-//apply from: 'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/grailsCentralPublishing.gradle'
-//apply from: 'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/bintrayPublishing.gradle'
+apply from: 'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/bintrayPublishing.gradle'
 
 ext {
 	grailsVersion = project.grailsVersion
@@ -102,14 +100,23 @@ task wrapper(type: Wrapper) {
 	gradleVersion = gradleWrapperVersion
 }
 
-task install(dependsOn: project.tasks.withType(PublishToMavenLocal))
+jar {
+	exclude "grails-app/conf/drools-context.xml"
+	exclude "grails-app/conf/DroolsConfig.groovy"
+	exclude "src/rules/**"
+}
 
 publishing {
 	publications {
-		artifactory(MavenPublication) {
+		maven(MavenPublication) {
 			pom.withXml {
-				def node = asNode()
-				node.dependencyManagement.replaceNode {}
+				def pomNode = asNode()
+				pomNode.dependencyManagement.replaceNode {}
+				pomNode.dependencies.dependency.findAll {
+					it.version.text().isEmpty()
+				}.each {
+					it.replaceNode {}
+				}
 			}
 			artifactId project.name
 			from components.java
@@ -123,10 +130,19 @@ publishing {
 				extension: "xml"
 		}
 	}
-}
-
-task installArtifactory(dependsOn: "publishArtifactoryPublicationToMavenRepository") {
-	publishing {
+	if (project.hasProperty('grailsCentral')) {
+		repositories {
+			maven {
+				credentials {
+					username grailsPluginsUsername
+					password grailsPluginsPassword
+				}
+				if (version.endsWith('-SNAPSHOT')) {
+					url "https://repo.grails.org/grails/plugins3-snapshots-local"
+				}
+			}
+		}
+	} else {
 		repositories {
 			maven {
 				credentials {
@@ -144,3 +160,5 @@ task installArtifactory(dependsOn: "publishArtifactoryPublicationToMavenReposito
 }
 
 tasks.processResources.dependsOn(copyDroolsRule, writeDroolsContentXml)
+
+task install(dependsOn: project.tasks.withType(PublishToMavenLocal))
