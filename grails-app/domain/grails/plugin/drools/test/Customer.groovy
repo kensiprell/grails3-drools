@@ -1,4 +1,4 @@
-package grails.plugin.drools
+package grails.plugin.drools.test
 
 class Customer {
 	String name

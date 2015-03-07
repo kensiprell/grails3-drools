@@ -1,23 +1,36 @@
-package grails.plugin.drools
+package grails.plugin.drools.test
 
+import grails.plugin.drools.DroolsService
+import grails.test.mixin.integration.Integration
+import org.springframework.beans.factory.annotation.Autowired
 import spock.lang.Specification
-//import org.kie.api.runtime.KieSession
 
 import org.kie.api.runtime.KieSession
 import org.kie.api.runtime.StatelessKieSession
 
+@Integration
 class RulesTestsSpec extends Specification {
 
-	def droolsService
+	@Autowired
+	DroolsService droolsService
+	@Autowired
 	StatelessKieSession applicationStatelessSession
+	@Autowired
 	KieSession ticketStatefulSession
 
+	// TODO delete after testing
 	void "should fail"() {
 		when:
 		def one = 1
 		def two = 2
 		then:
 		one == two
+	}
+
+	// TODO delete after testing
+	void  "test DroolsService"() {
+		given:
+		droolsService.executeFromFile("file", []) == "nothing"
 	}
 
 	void "test applicationStatelessSession bean"() {

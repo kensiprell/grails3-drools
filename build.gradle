@@ -66,6 +66,8 @@ dependencies {
 	provided "org.grails:grails-dependencies"
 	provided 'javax.servlet:javax.servlet-api:3.1.0'
 	console "org.grails:grails-console"
+	testCompile "org.grails:grails-plugin-testing"
+	// Drools dependencies
 	compile "org.drools:drools-compiler:$droolsVersion"
 	compile "org.drools:drools-core:$droolsVersion"
 	compile "org.drools:drools-decisiontables:$droolsVersion"
@@ -81,7 +83,6 @@ dependencies {
 	runtime "org.eclipse.jdt.core.compiler:ecj:4.4"
 	runtime "org.mvel:mvel2:2.2.2.Final"
 	runtime "org.antlr:antlr-runtime:3.5.2"
-	testCompile "org.grails:grails-plugin-testing"
 }
 
 eclipse {
@@ -101,9 +102,11 @@ task wrapper(type: Wrapper) {
 }
 
 jar {
-	exclude "grails-app/conf/drools-context.xml"
-	exclude "grails-app/conf/DroolsConfig.groovy"
-	exclude "src/rules/**"
+	exclude "grails/plugin/drools/test/**"
+	exclude "rules.application.application.drl"
+	exclude "rules.ticket.ticket.drl"
+	exclude "drools-context.xml"
+	exclude "DroolsConfig.groovy"
 }
 
 publishing {
@@ -159,6 +162,22 @@ publishing {
 	}
 }
 
+sourceSets {
+	integrationTest {
+		compileClasspath += sourceSets.test.compileClasspath
+		runtimeClasspath += sourceSets.test.runtimeClasspath
+	}
+}
+
 tasks.processResources.dependsOn(copyDroolsRule, writeDroolsContentXml)
 
 task install(dependsOn: project.tasks.withType(PublishToMavenLocal))
+
+
+//println "TEST: " +
+//configurations.testRuntime.properties.each { println it }
+
+//sourceSets.integrationTest.runtimeClasspath.each { println "DROOLS: $it" }
+
+//println "TEST compileClasspath: " + sourceSets.integrationTest.compileClasspath.sources
+//println "TEST runtimeClasspath: " + sourceSets.integrationTest.runtimeClasspath.sources

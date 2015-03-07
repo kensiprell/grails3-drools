@@ -18,11 +18,8 @@ class DroolsGradlePlugin implements Plugin<Project> {
 			String drlFileLocationPath
 			String droolsDrlFileLocation = project.droolsDrlFileLocation ?: "src/rules"
 			project.gradle.taskGraph.whenReady { graph ->
-				destination = "$project.buildDir/classes/main"
-				if (graph.hasTask(":integrationTest")) {
-					destination = "$project.buildDir/classes/integrationTest"
-				}
-				// TODO add test and path for war creation "$stagingDir/WEB-INF/classes"
+				destination = "$project.buildDir/resources/main"
+				// TODO ? add test and path for war creation "$stagingDir/WEB-INF/classes"
 				drlFileLocationPath = new File("$project.projectDir/$droolsDrlFileLocation").canonicalPath
 				 tree = project.fileTree(drlFileLocationPath) {
 					include "**/*.drl"
