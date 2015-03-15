@@ -19,7 +19,6 @@ class DroolsGradlePlugin implements Plugin<Project> {
 			// TODO rework to match new default location
 			String droolsDrlFileLocation = project.droolsDrlFileLocation ?: "src/rules"
 			project.gradle.taskGraph.whenReady { graph ->
-				// TODO stop copying files and use classLoader.getResourceAsStream("rules/application/application.drl") instead?
 				destination = "$project.buildDir/classes/main"
 				// TODO ? add test and path for war creation "$stagingDir/WEB-INF/classes"
 				//drlFileLocationPath = new File("$project.projectDir/$droolsDrlFileLocation").canonicalPath.toString()
@@ -32,11 +31,15 @@ class DroolsGradlePlugin implements Plugin<Project> {
 				outputs.dir destination
 			}
 			doLast {
+				// allow kie:spring to find packages
 				project.copy {
 					from drlFileLocationPath.toString()
 					// TODO get last dir
 					into "$destination/rules"
 				}
+				// violates DRY
+				// allows classLoader.getResourceAsStream("rules.application.application.drl")
+				// otherwise use classLoader.getResourceAsStream("rules/application/application.drl")
 				tree.each { File file ->
 					String filePath = file.canonicalPath
 					String newName = ("rules$filePath" - drlFileLocationPath).replaceAll("/", ".").replaceAll("\\\\", ".")
@@ -54,13 +57,6 @@ class DroolsGradlePlugin implements Plugin<Project> {
 		project.task('writeDroolsContentXml') {
 			def droolsConfigFile = new File("$project.projectDir/grails-app/conf/DroolsConfig.groovy").toURI().toURL()
 			def droolsContextXmlFile = new File("$project.projectDir/grails-app/conf/drools-context.xml")
-/*
-			def droolsContextXmlDir =  new File("$project.projectDir/src/main/resources/META-INF")
-			if (!droolsContextXmlDir.isDirectory()) {
-				droolsContextXmlDir.mkdirs()
-			}
-			def droolsContextXmlFile = new File("$droolsContextXmlDir/drools-context.xml")
-*/
 			inputs.file droolsConfigFile
 			outputs.file droolsContextXmlFile
 			doLast {

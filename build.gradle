@@ -102,21 +102,16 @@ task wrapper(type: Wrapper) {
 }
 
 jar {
-	//exclude "grails/plugin/drools/test/**"
 	exclude "rules.application.application.drl"
 	exclude "rules.ticket.ticket.drl"
 	exclude "drools-context.xml"
 	exclude "DroolsConfig.groovy"
 }
 sourcesJar {
-	//exclude "grails/plugin/drools/test/**"
 	exclude "rules.application.application.drl"
 	exclude "rules.ticket.ticket.drl"
 	exclude "drools-context.xml"
 	exclude "DroolsConfig.groovy"
-}
-javadocJar {
-	//exclude "grails/plugin/drools/test/**"
 }
 
 publishing {
@@ -180,15 +175,5 @@ sourceSets {
 }
 
 tasks.processResources.dependsOn(copyDroolsRule, writeDroolsContentXml)
-//tasks.processResources.dependsOn(writeDroolsContentXml)
 
 task install(dependsOn: project.tasks.withType(PublishToMavenLocal))
-
-
-//println "TEST: " +
-//configurations.testRuntime.properties.each { println it }
-
-//sourceSets.integrationTest.runtimeClasspath.each { println "DROOLS: $it" }
-
-//println "TEST compileClasspath: " + sourceSets.integrationTest.compileClasspath.sources
-//println "TEST runtimeClasspath: " + sourceSets.integrationTest.runtimeClasspath.sources

@@ -1,6 +1,5 @@
 package grails.plugin.drools
 
-import grails.plugin.drools.DroolsService
 import grails.test.mixin.integration.Integration
 import org.springframework.beans.factory.annotation.Autowired
 import spock.lang.Specification
@@ -13,25 +12,10 @@ class RulesTestsSpec extends Specification {
 
 	@Autowired
 	DroolsService droolsService
-	//@Autowired
+	@Autowired
 	StatelessKieSession applicationStatelessSession
-	//@Autowired
+	@Autowired
 	KieSession ticketStatefulSession
-
-	// TODO delete after testing
-	void "should fail"() {
-		when:
-		def one = 1
-		def two = 2
-		then:
-		one == two
-	}
-
-	// TODO delete after testing
-	void  "test DroolsService"() {
-		given:
-		droolsService.executeFromFile("file", []) == "nothing"
-	}
 
 	void "test applicationStatelessSession bean"() {
 		when: "age is over 18 and application is made this year"
@@ -143,8 +127,8 @@ class RulesTestsSpec extends Specification {
 
 	void "test ticketStatefulSession bean"() {
 		given:
-		def t1 = new Ticket(1, new Customer("Jack", "Gold"))
-		def t2 = new Ticket(2, new Customer("Tom", "Silver"))
+		def t1 = new Ticket(1, new Customer("Greg", "Gold"))
+		def t2 = new Ticket(2, new Customer("Sam", "Silver"))
 		def t3 = new Ticket(3, new Customer("Bill", "Bronze"))
 		def facts = [t1, t1.customer, t2, t2.customer, t3, t3.customer]
 
@@ -156,37 +140,37 @@ class RulesTestsSpec extends Specification {
 		ticketStatefulSession.dispose()
 
 		then:
-		"Escalate" == t1.status
-		5 == t1.customer.discount
-		"Escalate" == t2.status
-		0 == t2.customer.discount
-		"Pending" == t3.status
-		0 == t3.customer.discount
+		t1.status == "Escalate"
+		t1.customer.discount == 5
+		t2.status == "Escalate"
+		t2.customer.discount == 0
+		t3.status == "Pending"
+		t3.customer.discount == 0
 	}
 
 	void "test fireFromFile"() {
 		given:
-		def t1 = new Ticket(1, new Customer("Jack", "Gold"))
-		def t2 = new Ticket(2, new Customer("Tom", "Silver"))
+		def t1 = new Ticket(1, new Customer("Greg", "Gold"))
+		def t2 = new Ticket(2, new Customer("Sam", "Silver"))
 		def t3 = new Ticket(3, new Customer("Bill", "Bronze"))
 
 		when:
 		droolsService.fireFromFile("rules.ticket.ticket.drl", [t1, t1.customer, t2, t2.customer, t3, t3.customer])
 
 		then:
-		"Escalate" == t1.status
-		5 == t1.customer.discount
-		"Escalate" == t2.status
-		0 == t2.customer.discount
-		"Pending" == t3.status
-		0 == t3.customer.discount
+		t1.status == "Escalate"
+		t1.customer.discount == 5
+		t2.status == "Escalate"
+		t2.customer.discount == 0
+		t3.status == "Pending"
+		t3.customer.discount == 0
 	}
 
 	void "test fireFromDatabase with rule id"() {
 		given:
 		def classLoader = new GroovyClassLoader()
-		def t1 = new Ticket(1, new Customer("Jack", "Gold"))
-		def t2 = new Ticket(2, new Customer("Tom", "Silver"))
+		def t1 = new Ticket(1, new Customer("Greg", "Gold"))
+		def t2 = new Ticket(2, new Customer("Sam", "Silver"))
 		def t3 = new Ticket(3, new Customer("Bill", "Bronze"))
 
 		when:
@@ -196,19 +180,19 @@ class RulesTestsSpec extends Specification {
 		droolsService.fireFromDatabase(rule.id, [t1, t1.customer, t2, t2.customer, t3, t3.customer])
 
 		then:
-		"Escalate" == t1.status
-		5 == t1.customer.discount
-		"Escalate" == t2.status
-		0 == t2.customer.discount
-		"Pending" == t3.status
-		0 == t3.customer.discount
+		t1.status == "Escalate"
+		t1.customer.discount == 5
+		t2.status == "Escalate"
+		t2.customer.discount == 0
+		t3.status == "Pending"
+		t3.customer.discount == 0
 	}
 
 	void "test fireFromDatabase with packageName"() {
 		given:
 		def classLoader = new GroovyClassLoader()
-		def t1 = new Ticket(1, new Customer("Jack", "Gold"))
-		def t2 = new Ticket(2, new Customer("Tom", "Silver"))
+		def t1 = new Ticket(1, new Customer("Greg", "Gold"))
+		def t2 = new Ticket(2, new Customer("Sam", "Silver"))
 		def t3 = new Ticket(3, new Customer("Bill", "Bronze"))
 
 		when:
@@ -220,74 +204,11 @@ class RulesTestsSpec extends Specification {
 		droolsService.fireFromDatabase("ticket", [t1, t1.customer, t2, t2.customer, t3, t3.customer])
 
 		then:
-		"Escalate" == t1.status
-		5 == t1.customer.discount
-		"Escalate" == t2.status
-		0 == t2.customer.discount
-		"Pending" == t3.status
-		0 == t3.customer.discount
-	}
-
-	static class Applicant {
-		String name
-		int age
-	}
-
-	static class Application {
-		Date dateApplied
-		boolean valid
-	}
-
-	static class Customer {
-		String name
-		String subscription
-		int discount
-
-	/*
-		Customer(String name, String subscription) {
-			this()
-			this.name = name
-			this.subscription = subscription
-		}
-	*/
-
-		String toString() {
-			"Name: '$name', Subscription: '$subscription', Discount: $discount %"
-		}
-	}
-
-	static class DroolsRule {
-
-		String rule
-		String description
-		String packageName
-
-		static mapping = {
-			rule type: 'text'
-		}
-
-		static constraints = {
-			rule blank: false
-			description blank: false
-			packageName blank: true
-		}
-	}
-
-	static class Ticket {
-		Customer customer
-		String status = 'New'
-
-	/*
-		Ticket(Long id, Customer customer) {
-			this()
-			this.id = id
-			this.customer = customer
-			status = 'New'
-		}
-	*/
-
-		String toString() {
-			"Ticket #$id: Customer[$customer] Status[$status]"
-		}
+		t1.status == "Escalate"
+		t1.customer.discount == 5
+		t2.status == "Escalate"
+		t2.customer.discount == 0
+		t3.status == "Pending"
+		t3.customer.discount == 0
 	}
 }

@@ -17,9 +17,7 @@ spring:
 grails:
   plugin:
     drools:
-      configurationType: droolsConfigGroovy
       droolsRuleDomainClass: grails.plugin.drools.DroolsRule
-      drlFileLocation: src/rules
     mime:
         disable:
             accept:
