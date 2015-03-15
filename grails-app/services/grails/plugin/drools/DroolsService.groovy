@@ -27,7 +27,6 @@ class DroolsService {
 		if (!rule) {
 			return
 		}
-
 		Resource resource = KieServices.Factory.get().resources.newByteArrayResource(rule.bytes)
 		execute(resource, facts)
 	}
@@ -42,7 +41,6 @@ class DroolsService {
 		if (!rules) {
 			return
 		}
-
 		Resource resource = KieServices.Factory.get().resources.newByteArrayResource(rules)
 		if (resource){
 			fire(resource, facts)
@@ -71,7 +69,6 @@ class DroolsService {
 		if (!rule) {
 			return
 		}
-
 		Resource resource = KieServices.Factory.get().resources.newByteArrayResource(rule.bytes)
 		fire(resource, facts)
 	}
@@ -86,7 +83,6 @@ class DroolsService {
 		if (!rules) {
 			return
 		}
-
 		Resource resource = KieServices.Factory.get().resources.newByteArrayResource(rules)
 		fire(resource, facts)
 	}
@@ -110,7 +106,6 @@ class DroolsService {
 		if (!domainClass) {
 			return
 		}
-
 		def rules = new StringBuilder()
 		domainClass.findAllByPackageName(packageName).each { rules << it.rule << ' ' }
 		rules.toString().bytes
@@ -121,7 +116,6 @@ class DroolsService {
 			log.error("Kie Resource is null")
 			return
 		}
-
 		KieBase kieBase = buildKieBase(resource)
 		StatelessKieSession kieSession = kieBase.newStatelessKieSession()
 		kieSession.execute(facts)
@@ -132,7 +126,6 @@ class DroolsService {
 			log.error("Kie Resource is null")
 			return
 		}
-
 		KieBase kieBase = buildKieBase(resource)
 		KieSession kieSession = kieBase.newKieSession()
 		for (fact in facts) {
@@ -158,6 +151,7 @@ class DroolsService {
 	protected Class getDroolsRuleDomainClass() {
 		String className = grailsApplication.config.grails.plugin.drools.droolsRuleDomainClass
 		if (!className) {
+			// TODO add application.yml
 			log.error("You must set grails.plugin.drools.droolsRuleDomainClass in Config.groovy")
 			return null
 		}

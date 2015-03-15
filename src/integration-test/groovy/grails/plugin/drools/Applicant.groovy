@@ -1,4 +1,4 @@
-package grails.plugin.drools.test
+package grails.plugin.drools
 
 class Applicant {
 	String name

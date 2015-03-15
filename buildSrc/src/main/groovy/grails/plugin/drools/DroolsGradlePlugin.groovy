@@ -16,19 +16,27 @@ class DroolsGradlePlugin implements Plugin<Project> {
 			FileTree tree
 			String destination
 			String drlFileLocationPath
+			// TODO rework to match new default location
 			String droolsDrlFileLocation = project.droolsDrlFileLocation ?: "src/rules"
 			project.gradle.taskGraph.whenReady { graph ->
-				destination = "$project.buildDir/resources/main"
+				// TODO stop copying files and use classLoader.getResourceAsStream("rules/application/application.drl") instead?
+				destination = "$project.buildDir/classes/main"
 				// TODO ? add test and path for war creation "$stagingDir/WEB-INF/classes"
+				//drlFileLocationPath = new File("$project.projectDir/$droolsDrlFileLocation").canonicalPath.toString()
 				drlFileLocationPath = new File("$project.projectDir/$droolsDrlFileLocation").canonicalPath
-				 tree = project.fileTree(drlFileLocationPath) {
+				tree = project.fileTree(drlFileLocationPath) {
 					include "**/*.drl"
 					include "**/*.rule"
 				}
-				inputs.file tree
+				inputs.file drlFileLocationPath
 				outputs.dir destination
 			}
 			doLast {
+				project.copy {
+					from drlFileLocationPath.toString()
+					// TODO get last dir
+					into "$destination/rules"
+				}
 				tree.each { File file ->
 					String filePath = file.canonicalPath
 					String newName = ("rules$filePath" - drlFileLocationPath).replaceAll("/", ".").replaceAll("\\\\", ".")
@@ -46,6 +54,13 @@ class DroolsGradlePlugin implements Plugin<Project> {
 		project.task('writeDroolsContentXml') {
 			def droolsConfigFile = new File("$project.projectDir/grails-app/conf/DroolsConfig.groovy").toURI().toURL()
 			def droolsContextXmlFile = new File("$project.projectDir/grails-app/conf/drools-context.xml")
+/*
+			def droolsContextXmlDir =  new File("$project.projectDir/src/main/resources/META-INF")
+			if (!droolsContextXmlDir.isDirectory()) {
+				droolsContextXmlDir.mkdirs()
+			}
+			def droolsContextXmlFile = new File("$droolsContextXmlDir/drools-context.xml")
+*/
 			inputs.file droolsConfigFile
 			outputs.file droolsContextXmlFile
 			doLast {
@@ -63,7 +78,7 @@ class DroolsGradlePlugin implements Plugin<Project> {
 					"xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
 					"xmlns:kie": "http://drools.org/schema/kie-spring",
 					"xsi:schemaLocation": "http://www.springframework.org/schema/beans " +
-						"http://www.springframework.org/schema/beans/spring-beans-3.0.xsd " +
+						"http://www.springframework.org/schema/beans/spring-beans-4.0.xsd " +
 						"http://drools.org/schema/kie-spring http://drools.org/schema/kie-spring.xsd") {
 					"kie:kmodule"(id: "defaultKieModule") {
 						droolsConfig.kieBases.each { kieBase ->

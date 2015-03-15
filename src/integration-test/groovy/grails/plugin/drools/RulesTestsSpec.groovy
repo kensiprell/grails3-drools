@@ -1,4 +1,4 @@
-package grails.plugin.drools.test
+package grails.plugin.drools
 
 import grails.plugin.drools.DroolsService
 import grails.test.mixin.integration.Integration
@@ -13,9 +13,9 @@ class RulesTestsSpec extends Specification {
 
 	@Autowired
 	DroolsService droolsService
-	@Autowired
+	//@Autowired
 	StatelessKieSession applicationStatelessSession
-	@Autowired
+	//@Autowired
 	KieSession ticketStatefulSession
 
 	// TODO delete after testing
@@ -226,5 +226,68 @@ class RulesTestsSpec extends Specification {
 		0 == t2.customer.discount
 		"Pending" == t3.status
 		0 == t3.customer.discount
+	}
+
+	static class Applicant {
+		String name
+		int age
+	}
+
+	static class Application {
+		Date dateApplied
+		boolean valid
+	}
+
+	static class Customer {
+		String name
+		String subscription
+		int discount
+
+	/*
+		Customer(String name, String subscription) {
+			this()
+			this.name = name
+			this.subscription = subscription
+		}
+	*/
+
+		String toString() {
+			"Name: '$name', Subscription: '$subscription', Discount: $discount %"
+		}
+	}
+
+	static class DroolsRule {
+
+		String rule
+		String description
+		String packageName
+
+		static mapping = {
+			rule type: 'text'
+		}
+
+		static constraints = {
+			rule blank: false
+			description blank: false
+			packageName blank: true
+		}
+	}
+
+	static class Ticket {
+		Customer customer
+		String status = 'New'
+
+	/*
+		Ticket(Long id, Customer customer) {
+			this()
+			this.id = id
+			this.customer = customer
+			status = 'New'
+		}
+	*/
+
+		String toString() {
+			"Ticket #$id: Customer[$customer] Status[$status]"
+		}
 	}
 }

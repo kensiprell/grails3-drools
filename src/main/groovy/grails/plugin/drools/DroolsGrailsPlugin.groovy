@@ -8,7 +8,7 @@ class DroolsGrailsPlugin extends Plugin {
 	def pluginExcludes = [
 		"grails-app/conf/drools-context.xml",
 		"grails-app/conf/DroolsConfig.groovy",
-		"grails-app/domain/**",
+		//"grails-app/domain/**",
 		"src/rules/**"
 	]
 	def title = "Drools Plugin"

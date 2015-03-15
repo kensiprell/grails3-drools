@@ -44,6 +44,7 @@ repositories {
 	mavenLocal()
 	mavenCentral()
 	maven { url "https://repo.grails.org/grails/core" }
+	maven { url "https://repository.jboss.org/nexus/content/repositories/public" }
 }
 
 dependencyManagement {
@@ -56,8 +57,7 @@ dependencyManagement {
 dependencies {
 	String comSunXmlBindVersion = "2.2.11"
 	// TODO test with excludes
-	String droolsVersion = "6.2.0.CR4"
-	//"6.1.0.Final" results in java.lang.IncompatibleClassChangeError: class org.grails.compiler.injection.GrailsAwareInjectionOperation$1 has interface org.springframework.asm.ClassVisitor as super class.
+	String droolsVersion = "6.2.0.Final"
 	provided "org.springframework.boot:spring-boot-starter-logging"
 	provided "org.springframework.boot:spring-boot-starter-actuator"
 	provided "org.springframework.boot:spring-boot-autoconfigure"
@@ -102,11 +102,21 @@ task wrapper(type: Wrapper) {
 }
 
 jar {
-	exclude "grails/plugin/drools/test/**"
+	//exclude "grails/plugin/drools/test/**"
 	exclude "rules.application.application.drl"
 	exclude "rules.ticket.ticket.drl"
 	exclude "drools-context.xml"
 	exclude "DroolsConfig.groovy"
+}
+sourcesJar {
+	//exclude "grails/plugin/drools/test/**"
+	exclude "rules.application.application.drl"
+	exclude "rules.ticket.ticket.drl"
+	exclude "drools-context.xml"
+	exclude "DroolsConfig.groovy"
+}
+javadocJar {
+	//exclude "grails/plugin/drools/test/**"
 }
 
 publishing {
@@ -170,6 +180,7 @@ sourceSets {
 }
 
 tasks.processResources.dependsOn(copyDroolsRule, writeDroolsContentXml)
+//tasks.processResources.dependsOn(writeDroolsContentXml)
 
 task install(dependsOn: project.tasks.withType(PublishToMavenLocal))
 
