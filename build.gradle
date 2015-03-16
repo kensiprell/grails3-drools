@@ -55,6 +55,8 @@ dependencyManagement {
 }
 
 dependencies {
+	compile droolsPluginCompile
+	runtime droolsPluginRuntime
 	String comSunXmlBindVersion = "2.2.11"
 	// TODO test with excludes
 	String droolsVersion = "6.2.0.Final"
@@ -67,6 +69,7 @@ dependencies {
 	provided 'javax.servlet:javax.servlet-api:3.1.0'
 	console "org.grails:grails-console"
 	testCompile "org.grails:grails-plugin-testing"
+/*
 	// Drools dependencies
 	compile "org.drools:drools-compiler:$droolsVersion"
 	compile "org.drools:drools-core:$droolsVersion"
@@ -83,6 +86,7 @@ dependencies {
 	runtime "org.eclipse.jdt.core.compiler:ecj:4.4"
 	runtime "org.mvel:mvel2:2.2.2.Final"
 	runtime "org.antlr:antlr-runtime:3.5.2"
+*/
 }
 
 eclipse {

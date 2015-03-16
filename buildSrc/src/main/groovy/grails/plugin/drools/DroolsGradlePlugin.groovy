@@ -12,16 +12,43 @@ class DroolsGradlePlugin implements Plugin<Project> {
 	}
 
 	void apply(Project project) {
+		project.ext {
+			droolsVersion = "6.2.0.Final"
+			comSunXmlBindVersion = "2.2.11"
+			janinoVersion = "2.7.5"
+			xstreamVersion = "1.4.7"
+			ecjVersion = "4.4"
+			mvelVersion = "2.2.2.Final"
+			antlrRuntimeVersion = "3.5.2"
+			droolsPluginCompile = [
+				"org.drools:drools-compiler:$droolsVersion",
+				"org.drools:drools-core:$droolsVersion",
+				"org.drools:drools-decisiontables:$droolsVersion",
+				"org.drools:drools-jsr94:$droolsVersion",
+				"org.drools:drools-verifier:$droolsVersion",
+				"org.kie:kie-api:$droolsVersion",
+				"org.kie:kie-internal:$droolsVersion",
+				"org.kie:kie-spring:$droolsVersion"
+			]
+			droolsPluginRuntime = [
+				"com.sun.xml.bind:jaxb-xjc:$comSunXmlBindVersion",
+				"com.sun.xml.bind:jaxb-impl:$comSunXmlBindVersion",
+				"org.codehaus.janino:janino:$janinoVersion",
+				"com.thoughtworks.xstream:xstream:$xstreamVersion",
+				"org.eclipse.jdt.core.compiler:ecj:$ecjVersion",
+				"org.mvel:mvel2:$mvelVersion",
+				"org.antlr:antlr-runtime:$antlrRuntimeVersion"
+			]
+		}
+
 		project.task('copyDroolsRule') {
 			FileTree tree
 			String destination
 			String drlFileLocationPath
-			// TODO rework to match new default location
 			String droolsDrlFileLocation = project.droolsDrlFileLocation ?: "src/rules"
 			project.gradle.taskGraph.whenReady { graph ->
 				destination = "$project.buildDir/classes/main"
 				// TODO ? add test and path for war creation "$stagingDir/WEB-INF/classes"
-				//drlFileLocationPath = new File("$project.projectDir/$droolsDrlFileLocation").canonicalPath.toString()
 				drlFileLocationPath = new File("$project.projectDir/$droolsDrlFileLocation").canonicalPath
 				tree = project.fileTree(drlFileLocationPath) {
 					include "**/*.drl"
@@ -32,10 +59,12 @@ class DroolsGradlePlugin implements Plugin<Project> {
 			}
 			doLast {
 				// allow kie:spring to find packages
+				def directory = droolsDrlFileLocation.tokenize('/')[-1]
 				project.copy {
 					from drlFileLocationPath.toString()
-					// TODO get last dir
-					into "$destination/rules"
+						include "**/*.drl"
+						include "**/*.rule"
+					into "$destination/$directory"
 				}
 				// violates DRY
 				// allows classLoader.getResourceAsStream("rules.application.application.drl")
