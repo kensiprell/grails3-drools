@@ -6,32 +6,21 @@ import org.gradle.api.Project
 import org.gradle.api.Plugin
 
 class DroolsGradlePlugin implements Plugin<Project> {
+	final DROOLS_VERSION = "6.2.0.Final"
+	final COM_SUN_XML_BIND_VERSION = "2.2.11"
+	final JANINO_VERSION = "2.7.5"
+	final XSTREAM_VERSION = "1.4.7"
+	final ECJ_VERSION = "4.4"
+	final MVEL_VERSION = "2.2.2.Final"
+	final ANTLR_RUNTIME_VERSION = "3.5.2"
 
 	private static Boolean listenerTypeCheck(type) {
 		["agendaEventListener", "processEventListener", "ruleRuntimeEventListener"].contains(type)
 	}
 
 	void apply(Project project) {
-		project.task("getDroolsPluginRuntime") {
-			String comSunXmlBindVersion = project.hasProperty("comSunXmlBindVersion") ? project.comSunXmlBindVersion : "2.2.11"
-			String janinoVersion = project.hasProperty("janinoVersion") ? project.janinoVersion : "2.7.5"
-			String xstreamVersion = project.hasProperty("xstreamVersion") ? project.xstreamVersion : "1.4.7"
-			String ecjVersion = project.hasProperty("ecjVersion") ? project.ecjVersion : "4.4"
-			String mvelVersion = project.hasProperty("mvelVersion") ? project.mvelVersion : "2.2.2.Final"
-			String antlrRuntimeVersion = project.hasProperty("antlrRuntimeVersion") ? project.antlrRuntimeVersion : "3.5.2"
-			project.ext.droolsPluginRuntime = [
-				"com.sun.xml.bind:jaxb-xjc:$comSunXmlBindVersion",
-				"com.sun.xml.bind:jaxb-impl:$comSunXmlBindVersion",
-				"org.codehaus.janino:janino:$janinoVersion",
-				"com.thoughtworks.xstream:xstream:$xstreamVersion",
-				"org.eclipse.jdt.core.compiler:ecj:$ecjVersion",
-				"org.mvel:mvel2:$mvelVersion",
-				"org.antlr:antlr-runtime:$antlrRuntimeVersion"
-			]
-		}
-
 		project.task("getDroolsPluginCompile") {
-			String droolsVersion = project.hasProperty("droolsVersion") ? project.droolsVersion : "6.2.0.Final"
+			String droolsVersion = project.hasProperty("droolsVersion") ? project.droolsVersion : DROOLS_VERSION
 			project.ext.droolsPluginCompile = [
 					"org.drools:drools-compiler:$droolsVersion",
 					"org.drools:drools-core:$droolsVersion",
@@ -42,6 +31,24 @@ class DroolsGradlePlugin implements Plugin<Project> {
 					"org.kie:kie-internal:$droolsVersion",
 					"org.kie:kie-spring:$droolsVersion"
 				]
+		}
+
+		project.task("getDroolsPluginRuntime") {
+			String comSunXmlBindVersion = project.hasProperty("comSunXmlBindVersion") ? project.comSunXmlBindVersion : COM_SUN_XML_BIND_VERSION
+			String janinoVersion = project.hasProperty("janinoVersion") ? project.janinoVersion : JANINO_VERSION
+			String xstreamVersion = project.hasProperty("xstreamVersion") ? project.xstreamVersion : XSTREAM_VERSION
+			String ecjVersion = project.hasProperty("ecjVersion") ? project.ecjVersion : ECJ_VERSION
+			String mvelVersion = project.hasProperty("mvelVersion") ? project.mvelVersion : MVEL_VERSION
+			String antlrRuntimeVersion = project.hasProperty("antlrRuntimeVersion") ? project.antlrRuntimeVersion : ANTLR_RUNTIME_VERSION
+			project.ext.droolsPluginRuntime = [
+				"com.sun.xml.bind:jaxb-xjc:$comSunXmlBindVersion",
+				"com.sun.xml.bind:jaxb-impl:$comSunXmlBindVersion",
+				"org.codehaus.janino:janino:$janinoVersion",
+				"com.thoughtworks.xstream:xstream:$xstreamVersion",
+				"org.eclipse.jdt.core.compiler:ecj:$ecjVersion",
+				"org.mvel:mvel2:$mvelVersion",
+				"org.antlr:antlr-runtime:$antlrRuntimeVersion"
+			]
 		}
 
 		project.task('copyDroolsRule') {
