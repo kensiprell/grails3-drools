@@ -12,25 +12,14 @@ class DroolsGradlePlugin implements Plugin<Project> {
 	}
 
 	void apply(Project project) {
-		project.ext {
-			droolsVersion = "6.2.0.Final"
-			comSunXmlBindVersion = "2.2.11"
-			janinoVersion = "2.7.5"
-			xstreamVersion = "1.4.7"
-			ecjVersion = "4.4"
-			mvelVersion = "2.2.2.Final"
-			antlrRuntimeVersion = "3.5.2"
-			droolsPluginCompile = [
-				"org.drools:drools-compiler:$droolsVersion",
-				"org.drools:drools-core:$droolsVersion",
-				"org.drools:drools-decisiontables:$droolsVersion",
-				"org.drools:drools-jsr94:$droolsVersion",
-				"org.drools:drools-verifier:$droolsVersion",
-				"org.kie:kie-api:$droolsVersion",
-				"org.kie:kie-internal:$droolsVersion",
-				"org.kie:kie-spring:$droolsVersion"
-			]
-			droolsPluginRuntime = [
+		project.task("getDroolsPluginRuntime") {
+			String comSunXmlBindVersion = project.hasProperty("comSunXmlBindVersion") ? project.comSunXmlBindVersion : "2.2.11"
+			String janinoVersion = project.hasProperty("janinoVersion") ? project.janinoVersion : "2.7.5"
+			String xstreamVersion = project.hasProperty("xstreamVersion") ? project.xstreamVersion : "1.4.7"
+			String ecjVersion = project.hasProperty("ecjVersion") ? project.ecjVersion : "4.4"
+			String mvelVersion = project.hasProperty("mvelVersion") ? project.mvelVersion : "2.2.2.Final"
+			String antlrRuntimeVersion = project.hasProperty("antlrRuntimeVersion") ? project.antlrRuntimeVersion : "3.5.2"
+			project.ext.droolsPluginRuntime = [
 				"com.sun.xml.bind:jaxb-xjc:$comSunXmlBindVersion",
 				"com.sun.xml.bind:jaxb-impl:$comSunXmlBindVersion",
 				"org.codehaus.janino:janino:$janinoVersion",
@@ -39,6 +28,20 @@ class DroolsGradlePlugin implements Plugin<Project> {
 				"org.mvel:mvel2:$mvelVersion",
 				"org.antlr:antlr-runtime:$antlrRuntimeVersion"
 			]
+		}
+
+		project.task("getDroolsPluginCompile") {
+			String droolsVersion = project.hasProperty("droolsVersion") ? project.droolsVersion : "6.2.0.Final"
+			project.ext.droolsPluginCompile = [
+					"org.drools:drools-compiler:$droolsVersion",
+					"org.drools:drools-core:$droolsVersion",
+					"org.drools:drools-decisiontables:$droolsVersion",
+					"org.drools:drools-jsr94:$droolsVersion",
+					"org.drools:drools-verifier:$droolsVersion",
+					"org.kie:kie-api:$droolsVersion",
+					"org.kie:kie-internal:$droolsVersion",
+					"org.kie:kie-spring:$droolsVersion"
+				]
 		}
 
 		project.task('copyDroolsRule') {
@@ -62,8 +65,8 @@ class DroolsGradlePlugin implements Plugin<Project> {
 				def directory = droolsDrlFileLocation.tokenize('/')[-1]
 				project.copy {
 					from drlFileLocationPath.toString()
-						include "**/*.drl"
-						include "**/*.rule"
+					include "**/*.drl"
+					include "**/*.rule"
 					into "$destination/$directory"
 				}
 				// violates DRY

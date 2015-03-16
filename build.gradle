@@ -55,11 +55,6 @@ dependencyManagement {
 }
 
 dependencies {
-	compile droolsPluginCompile
-	runtime droolsPluginRuntime
-	String comSunXmlBindVersion = "2.2.11"
-	// TODO test with excludes
-	String droolsVersion = "6.2.0.Final"
 	provided "org.springframework.boot:spring-boot-starter-logging"
 	provided "org.springframework.boot:spring-boot-starter-actuator"
 	provided "org.springframework.boot:spring-boot-autoconfigure"
@@ -69,24 +64,9 @@ dependencies {
 	provided 'javax.servlet:javax.servlet-api:3.1.0'
 	console "org.grails:grails-console"
 	testCompile "org.grails:grails-plugin-testing"
-/*
 	// Drools dependencies
-	compile "org.drools:drools-compiler:$droolsVersion"
-	compile "org.drools:drools-core:$droolsVersion"
-	compile "org.drools:drools-decisiontables:$droolsVersion"
-	compile "org.drools:drools-jsr94:$droolsVersion"
-	compile "org.drools:drools-verifier:$droolsVersion"
-	compile "org.kie:kie-api:$droolsVersion"
-	compile "org.kie:kie-internal:$droolsVersion"
-	compile "org.kie:kie-spring:$droolsVersion"
-	runtime "com.sun.xml.bind:jaxb-xjc:$comSunXmlBindVersion"
-	runtime "com.sun.xml.bind:jaxb-impl:$comSunXmlBindVersion"
-	runtime "org.codehaus.janino:janino:2.7.5"
-	runtime "com.thoughtworks.xstream:xstream:1.4.7"
-	runtime "org.eclipse.jdt.core.compiler:ecj:4.4"
-	runtime "org.mvel:mvel2:2.2.2.Final"
-	runtime "org.antlr:antlr-runtime:3.5.2"
-*/
+	compile droolsPluginCompile
+	runtime droolsPluginRuntime
 }
 
 eclipse {
