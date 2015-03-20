@@ -1,17 +1,11 @@
-/*
-target(createDroolsContext: "Creates a default drools-context.xml in grails-app/conf/.") {
-	def droolsContextFile = new File(basedir, "grails-app/conf/drools-context.xml")
-	if (!droolsContextFile.exists()) {
-		ant.copy(file: "$droolsPluginDir/src/templates/conf/drools-context.xml", todir: "$basedir/grails-app/conf")
-		println "Created default drools-context.xml in grails-app/conf/."
-	} else {
-		println "Error: grails-app/conf/drools-context.xml exists and was not overwritten."
-	}
+description("Creates a default drools-context.xml in grails-app/conf/.") {
+	usage "grails  create-drools-context"
+	flag name:'force', description:"Whether to overwrite existing files"
 }
 
-USAGE = """
-    create-drools-context
-"""
+def overwrite = flag("force") ? true : false
 
-setDefaultTarget 'createDroolsContext'
-*/
+render template: 
+	template("conf/drools-context.xml"),
+	destination: file("grails-app/conf/drools-context.xml"), 
+	overwrite: overwrite

@@ -1,6 +1,5 @@
-/*
 import org.grails.cli.interactive.completers.DomainClassCompleter
-import org.springframework.beans.factory.annotation.*
+//import org.springframework.beans.factory.annotation.Value
 
 description("Creates a domain class for drools plugin rules and updates Config.groovy.") {
 	usage "grails create-drools-domain [DOMAIN CLASS]"
@@ -24,11 +23,12 @@ if(args) {
 			overwrite: overwrite
 		addStatus "Domain class ${projectPath(sourceClass)} added."           
 
-		@Value('${grails.plugin.drools.droolsRuleDomainClass}')
-		String config
+		//@Value('${grails.plugin.drools.droolsRuleDomainClass}')
+		String config = grails.plugin.drools.droolsRuleDomainClass
 		def configFile = file("$baseDir/grails-app/conf/application.yml")
 		String newConfig
-		String Status
+		// TODO statusAppend = appIsRunning ? "You must restart the application ..." : "" 
+		String status
 		if (!config) {
 			newConfig = """
 // Added by the Drools plugin:
@@ -55,4 +55,3 @@ grails:
 } else {
 	error "No domain class specified"
 }
-*/
