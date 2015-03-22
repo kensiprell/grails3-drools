@@ -60,7 +60,7 @@ class DroolsGrailsPlugin extends Plugin {
 		}
 
 		// Change in a Drools rule
-		if (name.startsWith(droolsDrlFileLocation)) {
+		if (name.endsWith("drl") || name.endsWith("rule")) {
 			// TODO
 			String currentDir = new File(".").toString()
 			String ruleDestinationBaseDirectory = droolsDrlFileLocation.tokenize('/')[-1]
