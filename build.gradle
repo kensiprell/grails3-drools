@@ -2,7 +2,8 @@ buildscript {
 	ext {
 		grailsVersion = project.grailsVersion
 		drooolsConfigurationType = 'droolsConfigGroovy'
-		droolsDrlFileLocation = 'src/rules'
+		//droolsDrlFileLocation = 'src/rules'
+		droolsDrlFileLocation = project.droolsDrlFileLocation
 	}
 	repositories {
 		mavenLocal()
@@ -35,6 +36,7 @@ apply from: 'https://raw.githubusercontent.com/grails/grails-profile-repository/
 ext {
 	grailsVersion = project.grailsVersion
 	gradleWrapperVersion = project.gradleWrapperVersion
+	droolsDrlFileLocation = project.droolsDrlFileLocation
 }
 
 sourceCompatibility = 1.7

@@ -56,9 +56,9 @@ class DroolsGradlePlugin implements Plugin<Project> {
 			String destination
 			String drlFileLocationPath
 			String droolsDrlFileLocation = project.droolsDrlFileLocation ?: "src/rules"
+			String ruleDestinationBaseDirectory = droolsDrlFileLocation.tokenize('/')[-1].replaceAll("[\"']", "")
 			project.gradle.taskGraph.whenReady { graph ->
 				destination = "$project.buildDir/classes/main"
-				// TODO ? add test and path for war creation "$stagingDir/WEB-INF/classes"
 				drlFileLocationPath = new File("$project.projectDir/$droolsDrlFileLocation").canonicalPath
 				tree = project.fileTree(drlFileLocationPath) {
 					include "**/*.drl"
@@ -68,20 +68,18 @@ class DroolsGradlePlugin implements Plugin<Project> {
 				outputs.dir destination
 			}
 			doLast {
-				// allow kie:spring to find packages
-				def directory = droolsDrlFileLocation.tokenize('/')[-1]
+				// allows kie:kbase to find rule packages
 				project.copy {
 					from drlFileLocationPath.toString()
 					include "**/*.drl"
 					include "**/*.rule"
-					into "$destination/$directory"
+					into "$destination/$ruleDestinationBaseDirectory"
 				}
-				// violates DRY
+				// TODO violates DRY
 				// allows classLoader.getResourceAsStream("rules.application.application.drl")
 				// otherwise use classLoader.getResourceAsStream("rules/application/application.drl")
 				tree.each { File file ->
-					String filePath = file.canonicalPath
-					String newName = ("rules$filePath" - drlFileLocationPath).replaceAll("/", ".").replaceAll("\\\\", ".")
+					String newName = ("$ruleDestinationBaseDirectory$file.canonicalPath" - drlFileLocationPath).replaceAll("[/\\\\]", ".")
 					project.copy {
 						from file
 						rename { String fileName ->
