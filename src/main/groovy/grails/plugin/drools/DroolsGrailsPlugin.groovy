@@ -15,7 +15,7 @@ class DroolsGrailsPlugin extends Plugin {
 	def profiles = ['web']
 	def documentation = "https://github.com/kensiprell/grails-drools/blob/master/README.md"
 	def license = "APACHE"
-	def issueManagement = [system: "JIRA", url: "https://jira.grails.org/browse/GPDROOLS"]
+	def issueManagement = [system: "github", url: "https://github.com/kensiprell/grails3-drools/issues"]
 	def scm = [url: "https://github.com/kensiprell/grails-drools"]
 	def droolsDrlFileLocation = getDroolsDrlFileLocation()
 	def pluginExcludes = [

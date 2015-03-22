@@ -6,15 +6,15 @@
 
 The plugin has been tested  using the [sample application](https://github.com/kensiprell/grails-drools-sample) and [test script](https://github.com/kensiprell/grails-plugin-test-script/blob/master/drools.sh) in the following environment:
 
-* Drools 6.1.0.Final
+* Drools 6.2.0.Final
 
-* Grails versions 2.2.5, 2.3.9, and 2.4.4
+* Grails versions 3.0.0.RC2
 
-* OSX 10.10.1
+* OSX 10.10.2
 
 * JDK 1.7.0_75
 
-If you have a question, problem, suggestion, or want to report a bug, please submit an [issue](https://jira.grails.org/browse/GPDROOLS). I will reply as soon as I can.
+If you have a question, problem, suggestion, or want to report a bug, please submit an [issue](https://github.com/kensiprell/grails3-drools/issues). I will reply as soon as I can.
 
 [Release Notes](https://github.com/kensiprell/grails-drools/wiki/Release-Notes)
 
